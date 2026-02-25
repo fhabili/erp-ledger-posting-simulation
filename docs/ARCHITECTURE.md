@@ -22,3 +22,49 @@ Simulate ERP finance ledger mechanics (Universal Journal style) with reporting +
 - Subledger vs GL reconciliation-style checks
 - Mapping completeness / missing dimensions
 - Duplicate / anomaly detection
+
+## 4) Control layer (validation queries)
+- Document balance check (must net to zero)
+- Subledger vs GL reconciliation-style checks
+- Mapping completeness / missing dimensions
+- Duplicate / anomaly detection
+
+## Architecture Diagram
+
+```mermaid
+flowchart LR
+  subgraph Master_Data
+    COA["Chart of Accounts"]
+    MD["Profit / Cost Objects"]
+  end
+
+  subgraph Transaction_Layer
+    LEDGER["Universal Journal (Ledger Line Items)"]
+  end
+
+  subgraph Reporting_Layer
+    TB["Trial Balance"]
+    PL["P&L Statement"]
+    BS["Balance Sheet"]
+    MARGIN["Margin by Dimension"]
+  end
+
+  subgraph Control_Layer
+    C1["Document Balance Check"]
+    C2["Subledger vs GL Checks"]
+    C3["GR/IR Clearing Validation"]
+    C4["Master Data Completeness"]
+    C5["Duplicate / Anomaly Detection"]
+  end
+
+  COA --> LEDGER
+  MD --> LEDGER
+  LEDGER --> TB
+  LEDGER --> PL
+  LEDGER --> BS
+  LEDGER --> MARGIN
+  LEDGER --> C1
+  LEDGER --> C2
+  LEDGER --> C3
+  LEDGER --> C4
+  LEDGER --> C5
