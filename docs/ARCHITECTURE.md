@@ -23,12 +23,6 @@ Simulate ERP finance ledger mechanics (Universal Journal style) with reporting +
 - Mapping completeness / missing dimensions
 - Duplicate / anomaly detection
 
-## 4) Control layer (validation queries)
-- Document balance check (must net to zero)
-- Subledger vs GL reconciliation-style checks
-- Mapping completeness / missing dimensions
-- Duplicate / anomaly detection
-
 ## Architecture Diagram
 
 ```mermaid
