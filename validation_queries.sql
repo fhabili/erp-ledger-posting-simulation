@@ -2,13 +2,14 @@
 CONTROL PACK INDEX
 
 C1  Document balance integrity (double-entry)
-C2  Duplicate detection (doc/line uniqueness)
-C3  Master data completeness (missing dimensions/mappings)
-C4  Subledger vs GL reconciliation (AR/AP control accounts)
-C5  GR/IR clearing integrity
-C6  Ledger comparability (0L vs 2L)
-C7  Dimension integrity (profit/cost center outliers)
-C8  Sanity checks (unexpected sign / zero amounts)
+C2  Missing cost center on expense lines
+C3  Missing profit center on revenue lines
+C4  Duplicate detection (doc/line uniqueness)
+C5  Subledger vs GL reconciliation (AP)
+C6  Subledger vs GL reconciliation (AR)
+C7  GR/IR residual balance
+C8  Sanity summary (document-level view)
+EXTRA  Outlier monitoring (large single lines)
 */
 
 -- Validation Queries for ERP Ledger Posting Simulation
@@ -29,8 +30,8 @@ HAVING SUM(CASE WHEN dc_indicator = 'D' THEN amount ELSE -amount END) <> 0
 ORDER BY doc_id;
 
 ------------------------------------------------------------
--- 2) Check: Missing cost center on expense lines
--- (Typical rule: P&L expense lines require cost center)
+-- C2: Missing cost center on expense lines
+-- Expected result: 0 rows (all EXP lines have a cost center)
 ------------------------------------------------------------
 SELECT
   doc_id,
@@ -44,8 +45,8 @@ WHERE account_type = 'EXP'
 ORDER BY doc_id, line_no;
 
 ------------------------------------------------------------
--- 3) Check: Missing profit center on revenue lines
--- (Typical rule: Revenue lines should carry profit center)
+-- C3: Missing profit center on revenue lines
+-- Expected result: 0 rows (all REV lines have a profit center)
 ------------------------------------------------------------
 SELECT
   doc_id,
@@ -59,9 +60,18 @@ WHERE account_type = 'REV'
 ORDER BY doc_id, line_no;
 
 ------------------------------------------------------------
--- 4) Check: Subledger vs GL reconciliation (AP)
--- Compare Vendor Subledger open items vs AP control account in GL
--- (Simplified: AP control account = 300000, credits increase AP)
+-- C4: Duplicate detection (doc/line uniqueness)
+-- Expected result: 0 rows (no duplicate doc_id + line_no)
+------------------------------------------------------------
+SELECT doc_id, line_no, COUNT(*) AS occurrence_count
+FROM gl_entries
+GROUP BY doc_id, line_no
+HAVING COUNT(*) > 1
+ORDER BY doc_id, line_no;
+
+------------------------------------------------------------
+-- C5: Subledger vs GL reconciliation (AP)
+-- Expected result: difference = 0
 ------------------------------------------------------------
 WITH ap_gl AS (
   SELECT
@@ -82,8 +92,8 @@ SELECT
 FROM ap_gl, ap_sl;
 
 ------------------------------------------------------------
--- 5) Check: Subledger vs GL reconciliation (AR)
--- AR control account in GL = 110000 (debits increase AR)
+-- C6: Subledger vs GL reconciliation (AR)
+-- Expected result: difference = 0
 ------------------------------------------------------------
 WITH ar_gl AS (
   SELECT
@@ -104,9 +114,8 @@ SELECT
 FROM ar_gl, ar_sl;
 
 ------------------------------------------------------------
--- 6) Check: GR/IR residual balance
--- GR/IR clearing account = 200000
--- Residual != 0 indicates mismatch between GR and IR
+-- C7: GR/IR residual balance
+-- Expected result: 0 rows (clearing balance nets to 0)
 ------------------------------------------------------------
 SELECT
   account AS grir_account,
@@ -117,7 +126,8 @@ GROUP BY account
 HAVING SUM(CASE WHEN dc_indicator = 'D' THEN amount ELSE -amount END) <> 0;
 
 ------------------------------------------------------------
--- 7) Control-style summary: Document-level validations in one view
+-- C8: Sanity summary (document-level view)
+-- Expected result: net_balance = 0 for all docs
 ------------------------------------------------------------
 SELECT
   doc_id,
@@ -132,8 +142,7 @@ GROUP BY doc_id
 ORDER BY posting_date, doc_id;
 
 ------------------------------------------------------------
--- 8) Optional: Find suspicious postings (very large single lines)
--- Helps demonstrate monitoring mindset
+-- EXTRA: Outlier monitoring (large single lines)
 ------------------------------------------------------------
 SELECT
   doc_id,
