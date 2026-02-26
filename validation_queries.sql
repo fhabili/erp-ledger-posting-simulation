@@ -1,8 +1,22 @@
+/*
+CONTROL PACK INDEX
+
+C1  Document balance integrity (double-entry)
+C2  Duplicate detection (doc/line uniqueness)
+C3  Master data completeness (missing dimensions/mappings)
+C4  Subledger vs GL reconciliation (AR/AP control accounts)
+C5  GR/IR clearing integrity
+C6  Ledger comparability (0L vs 2L)
+C7  Dimension integrity (profit/cost center outliers)
+C8  Sanity checks (unexpected sign / zero amounts)
+*/
+
 -- Validation Queries for ERP Ledger Posting Simulation
 -- These queries represent typical control checks used in UAT, close, and reconciliation.
 
 ------------------------------------------------------------
--- 1) Check: Unbalanced documents (debit != credit)
+-- C1: Document balance integrity
+-- Expected result: 0 rows (all documents net to 0)
 ------------------------------------------------------------
 SELECT
   doc_id,
