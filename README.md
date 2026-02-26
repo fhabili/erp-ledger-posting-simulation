@@ -16,6 +16,23 @@ This project reflects finance-domain Business Systems thinking rather than softw
 
 ---
 
+## Quick Start (PostgreSQL)
+
+1) Create tables  
+- Run: `schema.sql`
+
+2) Load sample transactions  
+- Run: `sample_data.sql`
+
+3) Run validation / reconciliation controls  
+- Run: `validation_queries.sql`
+
+## Documentation
+- Architecture: `docs/ARCHITECTURE.md`
+- Control Pack: `docs/CONTROL_PACK.md`
+  
+---
+
 ## Business Context
 
 Modern ERP systems (e.g., SAP) store financial postings in structured ledger tables. Every transaction must:
