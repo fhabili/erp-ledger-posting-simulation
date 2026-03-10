@@ -87,7 +87,7 @@ These represent typical validation tasks during:
 ## Example Use Cases
 
 - Vendor invoice with VAT (P2P process)
-- Customer invoice with revenue posting (L2C process)
+- Customer invoice with revenue posting (O2C process)
 - Goods receipt and invoice receipt (GR/IR clearing)
 - Period-end validation checks
 
