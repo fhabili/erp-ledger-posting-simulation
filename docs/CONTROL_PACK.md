@@ -1,6 +1,6 @@
-# Control Pack (Close / UAT Style)
+# Control Pack (ERP Validation / UAT Style)
 
-This pack groups validation queries that simulate close/UAT controls in ERP finance.
+This pack groups validation queries that simulate ERP transaction-layer controls used during UAT, reconciliation reviews, hypercare stabilization, and period-end validation.
 
 ## C1 — Document balance integrity
 **Purpose:** every posted document must net to zero (double-entry).  
