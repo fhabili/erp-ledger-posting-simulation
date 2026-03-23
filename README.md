@@ -2,15 +2,18 @@
 
 ## Overview
 
-This repository simulates the transaction architecture layer of an ERP finance system using SQL. It models how business transactions flow into structured General Ledger postings, how AP/AR subledgers reconcile with control accounts, how cost objects are derived, and how validation controls protect ledger integrity before close and reporting.
+This repository simulates the transaction and posting layer of an ERP finance system using SQL.
+
+It models how business events such as supplier invoices, customer invoices, and goods movements are captured in ERP-style processes and translated into General Ledger and subledger postings. It also shows how accounting dimensions are derived and how transaction-level validation controls help protect ledger integrity before financial close and reporting.
 
 The objective is to demonstrate structured understanding of:
 
 - ERP-style double-entry posting logic
-- Subledger to General Ledger integration
-- Cost center and profit center derivation
+- business-event-to-accounting flow
+- subledger to General Ledger integration
+- cost center and profit center derivation
 - GR/IR clearing mechanics
-- Control-based validation frameworks
+- transaction-layer validation frameworks
 
 This project reflects finance systems and business systems analysis thinking rather than software engineering product development.
 
@@ -63,7 +66,7 @@ The structure reflects a simplified ERP financial architecture.
 
 ---
 
-## Validation Controls
+## Transaction-Level Validation Controls
 
 The project includes SQL queries to detect:
 
@@ -103,6 +106,8 @@ This repository serves as a portfolio artifact demonstrating:
 - SQL-based financial data verification
 
 It is intended for Finance Systems, Business Systems Analyst, and ERP Finance role positioning.
+
+Together with the Financial Close Validation Engine repository, this project forms the upstream transaction-to-posting layer of a broader transaction-to-report finance systems portfolio.
 
 ---
 
